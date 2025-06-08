@@ -17,7 +17,7 @@ table {
 
 th, td { 
     border: 1px solid #cccccc; 
-    padding: 0.42cm; /* 1em ≈ 0.42cm */
+    padding: 0.42cm; 
     text-align: left; 
 }
 
@@ -26,24 +26,24 @@ th {
 }
 
 form { 
-    margin-top: 0.84cm; /* 2em ≈ 0.84cm */
+    margin-top: 0.84cm; 
     background: white; 
-    padding: 0.42cm; /* 1em ≈ 0.42cm */
+    padding: 0.42cm; 
     border: 1px solid #ddd; 
 }
 
 input, select { 
     margin: 0.3cm 0; 
-    padding: 0.21cm; /* 0.5em ≈ 0.21cm */
+    padding: 0.21cm; 
     width: 98%; 
 }
 
 button { 
-    padding: 0.21cm 0.42cm; /* 0.5em 1em ≈ 0.21cm 0.42cm */
+    padding: 0.21cm 0.42cm; 
 }
 
 .reportes { 
-    margin-top: 1.26cm; /* 3em ≈ 1.26cm */
+    margin-top: 1.26cm; 
     background: white; 
     padding: 1cm; 
     border: 1px solid #ccc; 
