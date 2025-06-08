@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Historias de Usuario</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background: #f5f5f5; }
+        h1, h2 { color: #333; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1em; background: white; }
+        th, td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
+        th { background-color: #eee; }
+        form { margin-top: 2em; background: white; padding: 1em; border: 1px solid #ddd; }
+        input, select { margin: 0.5em 0; padding: 0.5em; width: 100%; }
+        button { padding: 0.5em 1em; }
+        .reportes { margin-top: 3em; background: white; padding: 1em; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Historias de Usuario</h1>
+
+    <table id="tabla-historias">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Responsable</th>
+                <th>Estado</th>
+                <th>Puntos</th>
+                <th>Sprint</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <form id="form-historia">
+        <h2>Agregar Historia</h2>
+        <input type="text" id="titulo" placeholder="Título" required>
+        <input type="text" id="descripcion" placeholder="Descripción" required>
+        <input type="text" id="responsable" placeholder="Responsable" required>
+        <select id="estado">
+            <option value="nueva">Nueva</option>
+            <option value="activa">Activa</option>
+            <option value="finalizada">Finalizada</option>
+            <option value="impedimento">Impedimento</option>
+        </select>
+        <input type="number" id="puntos" placeholder="Puntos" required>
+        <input type="date" id="fecha_creacion" required>
+        <input type="date" id="fecha_finalizacion">
+        <select id="sprint_id" required></select>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <div class="reportes">
+        <h2>Resumen de Historias por Estado</h2>
+        <table id="tabla-reportes">
+            <thead>
+                <tr><th>Estado</th><th>Total</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        const HISTORIAS_URL = "http://localhost/historias/public/";
+        const SPRINTS_URL = "http://localhost/sprints/public/";
+        const REPORTES_URL = "http://localhost/reportes/public/";
+
+        function cargarHistorias() {
+            fetch(HISTORIAS_URL)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector("#tabla-historias tbody");
+                    tbody.innerHTML = "";
+                    data.forEach(h => {
+                        const row = `<tr><td>${h.titulo}</td><td>${h.responsable}</td><td>${h.estado}</td><td>${h.puntos}</td><td>${h.sprint_id}</td></tr>`;
+                        tbody.innerHTML += row;
+                    });
+                });
+        }
+
+        function cargarSprints() {
+            fetch(SPRINTS_URL)
+                .then(res => res.json())
+                .then(data => {
+                    const select = document.getElementById("sprint_id");
+                    select.innerHTML = "";
+                    data.forEach(s => {
+                        const opt = document.createElement("option");
+                        opt.value = s.id;
+                        opt.textContent = `${s.nombre} (${s.fecha_inicio} - ${s.fecha_fin})`;
+                        select.appendChild(opt);
+                    });
+                });
+        }
+
+        function cargarReporte() {
+            fetch(REPORTES_URL)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector("#tabla-reportes tbody");
+                    tbody.innerHTML = "";
+                    data.forEach(r => {
+                        const row = `<tr><td>${r.estado}</td><td>${r.total}</td></tr>`;
+                        tbody.innerHTML += row;
+                    });
+                });
+        }
+
+        document.getElementById("form-historia").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const data = {
+                titulo: document.getElementById("titulo").value,
+                descripcion: document.getElementById("descripcion").value,
+                responsable: document.getElementById("responsable").value,
+                estado: document.getElementById("estado").value,
+                puntos: parseInt(document.getElementById("puntos").value),
+                fecha_creacion: document.getElementById("fecha_creacion").value,
+                fecha_finalizacion: document.getElementById("fecha_finalizacion").value || null,
+                sprint_id: parseInt(document.getElementById("sprint_id").value)
+            };
+            fetch(HISTORIAS_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                cargarHistorias();
+                cargarReporte();
+                document.getElementById("form-historia").reset();
+            });
+        });
+
+        cargarHistorias();
+        cargarSprints();
+        cargarReporte();
+    </script>
+</body>
+</html>

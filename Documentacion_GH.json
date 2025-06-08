@@ -1,0 +1,8 @@
+{
+  "nombre_proyecto": "Gestor de Historias de Usuario",
+  "descripcion": "Aplicación basada en microservicios para gestionar historias de usuario por sprint.",
+  "microservicios": ["sprints", "historias", "reportes", "api-gateway"],
+  "frontend": "HTML, CSS y JavaScript sin frameworks",
+  "backend": "PHP con MySQL, usando XAMPP",
+  "base_datos": "gestor_historias_db.sql"
+}
